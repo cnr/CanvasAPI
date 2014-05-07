@@ -1,18 +1,18 @@
 package com.eueln.canvasapi;
 
-import com.eueln.canvasapi.graphics.MGraphics;
+import com.eueln.canvasapi.graphics.CanvasGraphics;
 
-public abstract class MComponent {
+public abstract class CanvasComponent {
     private int x;
     private int y;
     private int width;
     private int height;
 
-    private MContainer parent;
+    private CanvasContainer parent;
     private boolean visible = true;
     private boolean valid = true;
 
-    public MComponent(int x, int y, int width, int height) {
+    public CanvasComponent(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -24,7 +24,7 @@ public abstract class MComponent {
             && this.y <= y && y < this.y + height;
     }
 
-    public MComponent getComponentAt(int x, int y) {
+    public CanvasComponent getComponentAt(int x, int y) {
         return contains(x, y) ? this : null;
     }
 
@@ -37,7 +37,7 @@ public abstract class MComponent {
         invalidate();
     }
 
-    protected void setParent(MContainer parent) {
+    protected void setParent(CanvasContainer parent) {
         if (this.parent != null) {
             this.parent.remove(this);
         }
@@ -60,5 +60,5 @@ public abstract class MComponent {
         }
     }
 
-    public abstract void paint(MGraphics g);
+    public abstract void paint(CanvasGraphics g);
 }

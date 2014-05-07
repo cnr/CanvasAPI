@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
-public abstract class Canvas extends MContainer {
+public abstract class Canvas extends CanvasContainer {
     private final Location loc;
     private final BlockFace face;
 
