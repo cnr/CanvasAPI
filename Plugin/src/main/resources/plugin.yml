@@ -1,0 +1,3 @@
+name: CanvasAPI
+version: 1.0
+main: com.eueln.canvasapi.impl.CanvasAPI

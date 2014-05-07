@@ -1,0 +1,12 @@
+
+repositories {
+    maven { // org.bukkit:bukkit and org.bukkit:craftbukkit
+        url 'http://repo.bukkit.org/content/groups/public'
+    }
+}
+
+dependencies {
+    compile project(':API')
+    compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.1-SNAPSHOT'
+    compile group: 'org.bukkit', name: 'craftbukkit', version: '1.7.9-R0.1-SNAPSHOT'
+}

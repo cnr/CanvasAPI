@@ -1,0 +1,21 @@
+# Mac OS
+.DS_Store
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Gradle
+.gradle/
+build/
+
+# Vim
+*.swp
