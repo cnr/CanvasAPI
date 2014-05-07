@@ -5,4 +5,14 @@ subprojects {
 
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
+
+    repositories {
+        maven {
+            url 'http://repo.bukkit.org/content/groups/public'
+        }
+    }
+
+    dependencies {
+        compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.1-SNAPSHOT'
+    }
 }

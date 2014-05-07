@@ -1,5 +1,7 @@
 package com.eueln.canvasapi;
 
+import com.eueln.canvasapi.graphics.MGraphics;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,5 +47,12 @@ public abstract class MContainer extends MComponent {
             }
         }
         return null;
+    }
+
+    @Override
+    public void paint(MGraphics g) {
+        for (MComponent component : components) {
+            component.paint(g);
+        }
     }
 }
