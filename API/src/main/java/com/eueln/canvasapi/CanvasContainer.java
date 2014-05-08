@@ -52,7 +52,9 @@ public abstract class CanvasContainer extends CanvasComponent {
     @Override
     public void paint(CanvasGraphics g) {
         for (CanvasComponent component : components) {
-            component.paint(g);
+            if (component.isVisible()) {
+                component.paint(g);
+            }
         }
     }
 }
