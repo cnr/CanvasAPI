@@ -1,16 +1,16 @@
-package com.eueln.canvasapi.impl;
+package com.eueln.canvasapi.impl.map;
 
 import com.eueln.canvasapi.Canvas;
+import com.eueln.canvasapi.graphics.CanvasGraphics;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 
-public class MapCanvas extends Canvas {
+public class MapCanvas extends Canvas implements CanvasGraphics {
     private final int blocksWidth;
     private final int blocksHeight;
     private final CanvasSection[] sections;
 
-    protected MapCanvas(Location loc, BlockFace face, int blocksWidth, int blocksHeight) {
+    public MapCanvas(Location loc, BlockFace face, int blocksWidth, int blocksHeight) {
         super(loc, face, blocksWidth, blocksHeight);
 
         this.blocksWidth = blocksWidth;
@@ -18,18 +18,42 @@ public class MapCanvas extends Canvas {
 
         sections = new CanvasSection[blocksWidth * blocksHeight];
         initSections();
+
+        MapManager.register(this);
     }
 
     @Override
-    public void setVisible(Player player, boolean visible) {
-        // TODO
+    public void paint(CanvasGraphics g) {
+        super.paint(g);
+    }
+
+    // ----- CanvasGraphics section -----
+
+    @Override
+    public void drawString(String str, int x, int y) {
+
     }
 
     @Override
-    public boolean isVisible(Player player) {
-        // TODO
-        return false;
+    public void drawRect(int x, int y, int width, int height) {
+
     }
+
+    private void setPixel(int x, int y, byte color) {
+        int xSection = x >> 7;
+        int ySection = y >> 7;
+
+        if (xSection >= blocksWidth || ySection >= blocksHeight) {
+            return;
+        }
+
+        int xPixel = x & 0x7F;
+        int yPixel = y & 0x7F;
+
+        getSection(xSection, ySection).set(xPixel, yPixel, color);
+    }
+
+    // ----- Map canvas partitioning
 
     private void initSections() {
         for (int y = 0; y < blocksHeight; y++) {
@@ -39,11 +63,15 @@ public class MapCanvas extends Canvas {
         }
     }
 
+    private CanvasSection getSection(int x, int y) {
+        return sections[x + (y * blocksWidth)];
+    }
+
     protected CanvasSection[] getSections() {
         return sections;
     }
 
-    private static class CanvasSection {
+    protected static class CanvasSection {
         private static final int START_ID = 0x4000;
         private static int currentMapId = START_ID;
 
@@ -87,8 +115,7 @@ public class MapCanvas extends Canvas {
         }
 
         public byte[][] getContents() {
-            return contents; // TODO: defensively copy
+            return contents;
         }
     }
-
 }
