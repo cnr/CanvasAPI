@@ -27,6 +27,33 @@ public class MapCanvas extends Canvas implements CanvasGraphics {
         super.paint(g);
     }
 
+    public int getBlocksWidth() {
+        return blocksWidth;
+    }
+
+    public int getBlocksHeight() {
+        return blocksHeight;
+    }
+
+    public BlockFace getPositiveXFace() {
+        switch (getBlockFace()) {
+            case NORTH:
+                return BlockFace.WEST;
+
+            case EAST:
+                return BlockFace.NORTH;
+
+            case SOUTH:
+                return BlockFace.EAST;
+
+            case WEST:
+                return BlockFace.SOUTH;
+
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
     // ----- CanvasGraphics section -----
 
     @Override
@@ -36,7 +63,11 @@ public class MapCanvas extends Canvas implements CanvasGraphics {
 
     @Override
     public void drawRect(int x, int y, int width, int height) {
-
+        for (int i = x; i < x + width; i++) {
+            for (int k = y; k < y + height; k++) {
+                setPixel(i, k, (byte)38); // TODO: colors
+            }
+        }
     }
 
     private void setPixel(int x, int y, byte color) {
@@ -63,7 +94,7 @@ public class MapCanvas extends Canvas implements CanvasGraphics {
         }
     }
 
-    private CanvasSection getSection(int x, int y) {
+    protected CanvasSection getSection(int x, int y) {
         return sections[x + (y * blocksWidth)];
     }
 
@@ -71,7 +102,7 @@ public class MapCanvas extends Canvas implements CanvasGraphics {
         return sections;
     }
 
-    protected static class CanvasSection {
+    public static class CanvasSection {
         private static final int START_ID = 0x4000;
         private static int currentMapId = START_ID;
 

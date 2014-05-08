@@ -1,6 +1,7 @@
 package com.eueln.canvasapi.impl.map;
 
 import com.eueln.canvasapi.impl.CanvasAPI;
+import net.minecraft.server.v1_7_R3.EntityItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -10,6 +11,7 @@ public class MapManager implements Listener, Runnable {
     private static final MapManager _instance = new MapManager();
 
     private final Set<MapCanvas> registered = new HashSet<>();
+    private final Map<MapCanvas, EntityItemFrame[]> frames = new HashMap<>();
     private final Map<MapCanvas, List<Player>> lastVisibleMap = new HashMap<>();
 
     private MapManager() {}
@@ -24,6 +26,7 @@ public class MapManager implements Listener, Runnable {
 
     protected static void register(MapCanvas canvas) {
         _instance.registered.add(canvas);
+        _instance.frames.put(canvas, FrameUtil.createFrames(canvas));
     }
 
     @Override
@@ -75,17 +78,22 @@ public class MapManager implements Listener, Runnable {
             it.remove();
             hideCanvas(player, canvas);
         }
+
+        lastVisibleMap.put(canvas, lastVisible);
     }
 
     private void updateSection(List<Player> players, MapCanvas.CanvasSection section) {
-        // TODO
+        FrameUtil.sendSection(players, section.getMapId(), section.getContents());
     }
 
     private void sendCanvas(Player player, MapCanvas canvas) {
-        // TODO
+        FrameUtil.spawn(player, frames.get(canvas));
+        for (MapCanvas.CanvasSection section : canvas.getSections()) {
+            updateSection(Arrays.asList(player), section);
+        }
     }
 
     private void hideCanvas(Player player, MapCanvas canvas) {
-        // TODO
+        FrameUtil.destroy(player, frames.get(canvas));
     }
 }

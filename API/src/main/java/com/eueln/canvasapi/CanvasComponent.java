@@ -55,7 +55,7 @@ public abstract class CanvasComponent {
 
     public void invalidate() {
         valid = false;
-        if (parent.isValid()) {
+        if (parent != null && parent.isValid()) {
             parent.invalidate();
         }
     }
