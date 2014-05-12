@@ -1,29 +1,28 @@
 package com.eueln.canvasapi;
 
-import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class Canvas extends CanvasContainer {
-    private final Location loc;
-    private final BlockFace face;
+public class Canvas extends CanvasContainer {
+    private final CanvasGraphics graphics;
 
     private final Set<Player> canSee = new HashSet<>();
 
-    protected Canvas(Location loc, BlockFace face, int width, int height) {
-        super(0, 0, width, height);
-        this.loc = loc;
-        this.face = face;
+    public Canvas(CanvasGraphics graphicsProvider) {
+        super(0, 0, graphicsProvider.getWidth(), graphicsProvider.getHeight());
+        this.graphics = graphicsProvider;
+        graphicsProvider.register(this);
     }
 
     public void setVisible(Player player, boolean visible) {
         if (visible) {
             canSee.add(player);
+            graphics.showTo(player);
         } else {
             canSee.remove(player);
+            graphics.hideFrom(player);
         }
     }
 
@@ -37,15 +36,15 @@ public abstract class Canvas extends CanvasContainer {
         return ret;
     }
 
+    // We're treating CanvasComponent's setVisible as a `visible to all` option
+    // for Canvas
+    @Override
+    public void setVisible(boolean visibleToAll) {
+        super.setVisible(true);
+        graphics.showToAll();
+    }
+
     public boolean isVisibleToAll() {
         return super.isVisible();
-    }
-
-    public Location getLocation() {
-        return loc.clone(); // defensively copy
-    }
-
-    public BlockFace getBlockFace() {
-        return face;
     }
 }

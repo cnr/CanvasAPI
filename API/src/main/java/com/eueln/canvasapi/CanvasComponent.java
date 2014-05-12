@@ -1,7 +1,5 @@
 package com.eueln.canvasapi;
 
-import com.eueln.canvasapi.graphics.CanvasGraphics;
-
 public abstract class CanvasComponent {
     private int x;
     private int y;

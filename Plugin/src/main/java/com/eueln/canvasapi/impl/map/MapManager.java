@@ -1,5 +1,6 @@
 package com.eueln.canvasapi.impl.map;
 
+import com.eueln.canvasapi.Canvas;
 import com.eueln.canvasapi.impl.CanvasAPI;
 import net.minecraft.server.v1_7_R3.EntityItemFrame;
 import org.bukkit.entity.Player;
@@ -8,92 +9,75 @@ import org.bukkit.event.Listener;
 import java.util.*;
 
 public class MapManager implements Listener, Runnable {
-    private static final MapManager _instance = new MapManager();
+    private final CanvasAPI plugin;
+    private final Set<MapCanvasGraphics> registered = new HashSet<>();
+    private final Map<MapCanvasGraphics, EntityItemFrame[]> frames = new HashMap<>();
 
-    private final Set<MapCanvas> registered = new HashSet<>();
-    private final Map<MapCanvas, EntityItemFrame[]> frames = new HashMap<>();
-    private final Map<MapCanvas, List<Player>> lastVisibleMap = new HashMap<>();
-
-    private MapManager() {}
-
-    public static void init(CanvasAPI plugin) {
-        // Register events
-        plugin.getServer().getPluginManager().registerEvents(_instance, plugin);
-
-        // Schedule our task
-        plugin.getServer().getScheduler().runTaskTimer(plugin, _instance, 1L, 1L);
+    public MapManager(CanvasAPI plugin) {
+        this.plugin = plugin;
     }
 
-    protected static void register(MapCanvas canvas) {
-        _instance.registered.add(canvas);
-        _instance.frames.put(canvas, FrameUtil.createFrames(canvas));
+    public void register(MapCanvasGraphics graphics) {
+        registered.add(graphics);
+        frames.put(graphics, FrameUtil.createFrames(graphics));
+    }
+
+    public void showTo(Player player, MapCanvasGraphics graphics) {
+        // Make sure the player is in the correct world before trying
+        if (player.getWorld() == graphics.getWorld()) {
+
+            // Spawn the frame
+            FrameUtil.spawn(player, frames.get(graphics));
+
+            // Send the maps from each section
+            for (MapCanvasSection section : graphics.getSections()) {
+                FrameUtil.sendSection(Arrays.asList(player), section.getMapId(), section.getData());
+            }
+        }
+    }
+
+    public void showToAll(MapCanvasGraphics graphics) {
+        for (Player player : graphics.getWorld().getPlayers()) {
+
+            // Send canvas to players that couldn't previously see it
+            if (!graphics.getCanvas().isVisible(player)) {
+                showTo(player, graphics);
+            }
+        }
+    }
+
+    public void hideFrom(Player player, MapCanvasGraphics graphics) {
+        // Make sure the player could previously see it
+        if (player.getWorld() == graphics.getWorld()) {
+            FrameUtil.destroy(player, frames.get(graphics));
+        }
     }
 
     @Override
     public void run() {
-        for (MapCanvas canvas : registered) {
-            updateCanvas(canvas);
+        // Repaint all canvases
+        for (MapCanvasGraphics graphics : registered) {
+            graphics.repaint();
+
+            // Send updated sections to players
+            for (MapCanvasSection section : graphics.getSections()) {
+                if (section.hasChanges()) {
+                    section.clearChanges();
+                    resendSection(graphics.getCanvas(), section);
+                }
+            }
         }
     }
 
-    private void updateCanvas(MapCanvas canvas) {
-        // Get the players who could see this canvas as of the last update
-        List<Player> lastVisible = lastVisibleMap.get(canvas);
-        if (lastVisible == null) {
-            lastVisible = new ArrayList<>();
-        }
+    private void resendSection(Canvas canvas, MapCanvasSection section) {
+        List<Player> sendSectionTo = new ArrayList<>();
 
-        // Paint the canvas and send updated sections to those who could see it previously
-        canvas.paint(canvas);
-        for (MapCanvas.CanvasSection section : canvas.getSections()) {
-            if (section.hasChanges()) {
-                section.clearChanges();
-                updateSection(lastVisible, section);
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            if (canvas.isVisible(player)) {
+                sendSectionTo.add(player);
             }
         }
 
-        // Resolve player deltas
-
-        // Try to find new players
-        Set<Player> visibleTo = canvas.getVisibleTo();
-        for (Player player : visibleTo) {
-            if (lastVisible.contains(player)) {
-                continue;
-            }
-
-            // We've found a new player!
-            lastVisible.add(player);
-            sendCanvas(player, canvas);
-        }
-
-        // Find players who can no longer see the canvas
-        Iterator<Player> it = lastVisible.iterator();
-        while (it.hasNext()) {
-            Player player = it.next();
-            if (visibleTo.contains(player)) {
-                continue;
-            }
-
-            // We've found a player that's been removed!
-            it.remove();
-            hideCanvas(player, canvas);
-        }
-
-        lastVisibleMap.put(canvas, lastVisible);
-    }
-
-    private void updateSection(List<Player> players, MapCanvas.CanvasSection section) {
-        FrameUtil.sendSection(players, section.getMapId(), section.getContents());
-    }
-
-    private void sendCanvas(Player player, MapCanvas canvas) {
-        FrameUtil.spawn(player, frames.get(canvas));
-        for (MapCanvas.CanvasSection section : canvas.getSections()) {
-            updateSection(Arrays.asList(player), section);
-        }
-    }
-
-    private void hideCanvas(Player player, MapCanvas canvas) {
-        FrameUtil.destroy(player, frames.get(canvas));
+        FrameUtil.sendSection(sendSectionTo, section.getMapId(), section.getData());
     }
 }

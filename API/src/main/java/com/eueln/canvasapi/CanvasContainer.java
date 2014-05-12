@@ -1,7 +1,5 @@
 package com.eueln.canvasapi;
 
-import com.eueln.canvasapi.graphics.CanvasGraphics;
-
 import java.util.ArrayList;
 import java.util.List;
 

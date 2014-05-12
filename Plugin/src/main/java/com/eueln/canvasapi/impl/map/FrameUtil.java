@@ -15,9 +15,9 @@ import java.util.List;
 
 public class FrameUtil {
 
-    public static EntityItemFrame[] createFrames(MapCanvas canvas) {
+    public static EntityItemFrame[] createFrames(MapCanvasGraphics canvas) {
         EntityItemFrame[] frames = new EntityItemFrame[canvas.getSections().length];
-        for (MapCanvas.CanvasSection section : canvas.getSections()) {
+        for (MapCanvasSection section : canvas.getSections()) {
 
             BlockFace positiveY = BlockFace.DOWN;
             BlockFace positiveX = canvas.getPositiveXFace();
