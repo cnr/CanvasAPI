@@ -1,18 +1,18 @@
+apply plugin: 'java'
 apply plugin: 'idea'
 
-subprojects {
-    apply plugin: 'java'
+version = 0.1
 
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
-    repositories {
-        maven {
-            url 'http://repo.bukkit.org/content/groups/public'
-        }
+repositories {
+    maven {
+        url 'http://repo.bukkit.org/content/groups/public'
     }
+}
 
-    dependencies {
-        compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.1-SNAPSHOT'
-    }
+dependencies {
+    compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.1-SNAPSHOT'
+    compile group: 'org.bukkit', name: 'craftbukkit', version: '1.7.9-R0.1-SNAPSHOT'
 }
