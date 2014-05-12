@@ -52,8 +52,13 @@ public class CanvasAPI extends JavaPlugin implements Listener {
         canvas.add(component);
         canvas.addInteractListener(new InteractListener() {
             @Override
-            public void onInteract(Canvas canvas, Player player, int x, int y) {
+            public void onClick(Canvas canvas, Player player, int x, int y) {
                 player.sendMessage(ChatColor.GREEN + String.format("Interact: %d, %d", x, y));
+            }
+
+            @Override
+            public void onHover(Canvas canvas, Player player, int x, int y) {
+                player.sendMessage(ChatColor.GREEN + String.format("Hover: %d, %d", x, y));
             }
         });
         //component.setVisible(false);

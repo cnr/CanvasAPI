@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.*;
@@ -126,7 +127,23 @@ public class MapManager implements Listener, Runnable {
             int touchedY = (int)Math.floor(vector.getY() * 128);
 
             if (touchedX >= 0 && touchedY >= 0 && touchedX < canvas.getWidth() && touchedY < canvas.getHeight()) {
-                canvas.fireInteractEvent(event.getPlayer(), touchedX, touchedY);
+                canvas.fireClickEvent(event.getPlayer(), touchedX, touchedY);
+            }
+        }
+    }
+
+    // This seems like it could get out of hand. Maybe we should avoid / remove this entirely.
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        for (MapCanvasGraphics graphics : registered) {
+            Canvas canvas = graphics.getCanvas();
+
+            org.bukkit.util.Vector vector = MathUtil.getTouchedPoint(event.getPlayer(), graphics);
+            int touchedX = (int)Math.floor(vector.getX() * 128);
+            int touchedY = (int)Math.floor(vector.getY() * 128);
+
+            if (touchedX >= 0 && touchedY >= 0 && touchedX < canvas.getWidth() && touchedY < canvas.getHeight()) {
+                canvas.fireHoverEvent(event.getPlayer(), touchedX, touchedY);
             }
         }
     }

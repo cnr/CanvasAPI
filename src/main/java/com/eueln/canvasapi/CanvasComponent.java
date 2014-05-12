@@ -98,10 +98,18 @@ public abstract class CanvasComponent {
         interactListeners.add(listener);
     }
 
-    public void fireInteractEvent(Canvas canvas, Player player, int x, int y) {
+    public void fireClickEvent(Canvas canvas, Player player, int x, int y) {
         if (contains(x, y)) {
             for (InteractListener listener : interactListeners) {
-                listener.onInteract(canvas, player, x, y);
+                listener.onClick(canvas, player, x, y);
+            }
+        }
+    }
+
+    public void fireHoverEvent(Canvas canvas, Player player, int x, int y) {
+        if (contains(x, y)) {
+            for (InteractListener listener : interactListeners) {
+                listener.onHover(canvas, player, x, y);
             }
         }
     }

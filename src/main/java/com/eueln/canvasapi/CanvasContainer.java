@@ -60,14 +60,27 @@ public abstract class CanvasContainer extends CanvasComponent {
     }
 
     @Override
-    public void fireInteractEvent(Canvas canvas, Player player, int x, int y) {
+    public void fireClickEvent(Canvas canvas, Player player, int x, int y) {
         CanvasComponent component = getComponentAt(x, y);
         if (component != null) {
 
             if (component == this) {
-                super.fireInteractEvent(canvas, player, x, y);
+                super.fireClickEvent(canvas, player, x, y);
             } else {
-                component.fireInteractEvent(canvas, player, x, y);
+                component.fireClickEvent(canvas, player, x, y);
+            }
+        }
+    }
+
+    @Override
+    public void fireHoverEvent(Canvas canvas, Player player, int x, int y) {
+        CanvasComponent component = getComponentAt(x, y);
+        if (component != null) {
+
+            if (component == this) {
+                super.fireHoverEvent(canvas, player, x, y);
+            } else {
+                component.fireHoverEvent(canvas, player, x, y);
             }
         }
     }

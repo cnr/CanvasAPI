@@ -54,7 +54,11 @@ public class Canvas extends CanvasContainer {
 
     // ----- Events and listeners -----
 
-    public void fireInteractEvent(Player player, int x, int y) {
-        fireInteractEvent(this, player, x, y);
+    public void fireClickEvent(Player player, int x, int y) {
+        fireClickEvent(this, player, x, y);
+    }
+
+    public void fireHoverEvent(Player player, int x, int y) {
+        fireHoverEvent(this, player, x, y);
     }
 }
