@@ -120,6 +120,9 @@ public class MapManager implements Listener, Runnable {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         for (MapCanvasGraphics graphics : registered) {
+            if (graphics.getWorld() != event.getPlayer().getWorld()) {
+                continue;
+            }
             Canvas canvas = graphics.getCanvas();
 
             org.bukkit.util.Vector vector = MathUtil.getTouchedPoint(event.getPlayer(), graphics);
@@ -136,6 +139,9 @@ public class MapManager implements Listener, Runnable {
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         for (MapCanvasGraphics graphics : registered) {
+            if (graphics.getWorld() != event.getPlayer().getWorld()) {
+                continue;
+            }
             Canvas canvas = graphics.getCanvas();
 
             org.bukkit.util.Vector vector = MathUtil.getTouchedPoint(event.getPlayer(), graphics);
