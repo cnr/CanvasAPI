@@ -10,6 +10,7 @@ public interface CanvasGraphics {
     public int getHeight();
 
     void register(Canvas canvas);
+    public Canvas getCanvas();
 
     void showTo(Player player);
     void showToAll();

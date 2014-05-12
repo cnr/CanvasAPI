@@ -1,5 +1,7 @@
 package com.eueln.canvasapi;
 
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +46,8 @@ public abstract class CanvasContainer extends CanvasComponent {
                 return componentAt;
             }
         }
-        return null;
+
+        return this;
     }
 
     @Override
@@ -52,6 +55,19 @@ public abstract class CanvasContainer extends CanvasComponent {
         for (CanvasComponent component : components) {
             if (component.isVisible()) {
                 component.paint(g);
+            }
+        }
+    }
+
+    @Override
+    public void fireInteractEvent(Canvas canvas, Player player, int x, int y) {
+        CanvasComponent component = getComponentAt(x, y);
+        if (component != null) {
+
+            if (component == this) {
+                super.fireInteractEvent(canvas, player, x, y);
+            } else {
+                component.fireInteractEvent(canvas, player, x, y);
             }
         }
     }

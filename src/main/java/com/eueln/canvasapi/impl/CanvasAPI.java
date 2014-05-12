@@ -3,8 +3,10 @@ package com.eueln.canvasapi.impl;
 import com.eueln.canvasapi.Canvas;
 import com.eueln.canvasapi.CanvasComponent;
 import com.eueln.canvasapi.CanvasGraphics;
+import com.eueln.canvasapi.event.InteractListener;
 import com.eueln.canvasapi.impl.map.MapCanvasGraphics;
 import com.eueln.canvasapi.impl.map.MapManager;
+import org.bukkit.ChatColor;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,6 +50,12 @@ public class CanvasAPI extends JavaPlugin implements Listener {
             }
         };
         canvas.add(component);
+        canvas.addInteractListener(new InteractListener() {
+            @Override
+            public void onInteract(Canvas canvas, Player player, int x, int y) {
+                player.sendMessage(ChatColor.GREEN + String.format("Interact: %d, %d", x, y));
+            }
+        });
         //component.setVisible(false);
         canvas.setVisible(player, true);
     }

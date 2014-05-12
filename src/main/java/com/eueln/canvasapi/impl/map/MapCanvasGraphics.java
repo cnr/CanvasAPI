@@ -49,6 +49,7 @@ public class MapCanvasGraphics implements CanvasGraphics {
         return blocksHeight;
     }
 
+    @Override
     public Canvas getCanvas() {
         return canvas;
     }

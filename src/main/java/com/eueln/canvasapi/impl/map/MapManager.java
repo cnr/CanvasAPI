@@ -2,11 +2,13 @@ package com.eueln.canvasapi.impl.map;
 
 import com.eueln.canvasapi.Canvas;
 import com.eueln.canvasapi.impl.CanvasAPI;
+import com.eueln.canvasapi.impl.util.MathUtil;
 import net.minecraft.server.v1_7_R3.EntityItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.*;
@@ -111,5 +113,21 @@ public class MapManager implements Listener, Runnable {
                 }
             }
         });
+    }
+
+    // Fire canvas interact events
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        for (MapCanvasGraphics graphics : registered) {
+            Canvas canvas = graphics.getCanvas();
+
+            org.bukkit.util.Vector vector = MathUtil.getTouchedPoint(event.getPlayer(), graphics);
+            int touchedX = (int)Math.floor(vector.getX() * 128);
+            int touchedY = (int)Math.floor(vector.getY() * 128);
+
+            if (touchedX >= 0 && touchedY >= 0 && touchedX < canvas.getWidth() && touchedY < canvas.getHeight()) {
+                canvas.fireInteractEvent(event.getPlayer(), touchedX, touchedY);
+            }
+        }
     }
 }

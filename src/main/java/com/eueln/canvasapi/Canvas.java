@@ -16,6 +16,9 @@ public class Canvas extends CanvasContainer {
         graphicsProvider.register(this);
     }
 
+
+    // ----- Player visibility -----
+
     public void setVisible(Player player, boolean visible) {
         if (visible) {
             canSee.add(player);
@@ -46,5 +49,12 @@ public class Canvas extends CanvasContainer {
 
     public boolean isVisibleToAll() {
         return super.isVisible();
+    }
+
+
+    // ----- Events and listeners -----
+
+    public void fireInteractEvent(Player player, int x, int y) {
+        fireInteractEvent(this, player, x, y);
     }
 }
