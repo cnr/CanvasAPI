@@ -4,7 +4,10 @@ import com.eueln.canvasapi.Canvas;
 import com.eueln.canvasapi.impl.CanvasAPI;
 import net.minecraft.server.v1_7_R3.EntityItemFrame;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.*;
 
@@ -53,6 +56,9 @@ public class MapManager implements Listener, Runnable {
         }
     }
 
+
+    // ----- Canvas repainting and resending of changed sections -----
+
     @Override
     public void run() {
         // Repaint all canvases
@@ -79,5 +85,31 @@ public class MapManager implements Listener, Runnable {
         }
 
         FrameUtil.sendSection(sendSectionTo, section.getMapId(), section.getData());
+    }
+
+
+    // ----- Player events
+
+    // Hide and show relevant canvases when the player teleports
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onTeleport(PlayerTeleportEvent event) {
+        if (event.getFrom().getWorld() == event.getTo().getWorld()) {
+            return;
+        }
+
+        final Player player = event.getPlayer();
+
+        for (MapCanvasGraphics graphics : registered) {
+            hideFrom(player, graphics); // The world guarantee is already there
+        }
+
+        plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                for (MapCanvasGraphics graphics : registered) {
+                    showTo(player, graphics); // The world guarantee is already there
+                }
+            }
+        });
     }
 }
