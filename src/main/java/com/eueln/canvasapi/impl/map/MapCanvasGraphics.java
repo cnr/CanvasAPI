@@ -19,6 +19,11 @@ public class MapCanvasGraphics implements CanvasGraphics {
 
     public MapCanvasGraphics(Location loc, BlockFace face, int blocksWidth, int blocksHeight) {
         this.loc = loc;
+        // Floor the location values
+        loc.setX(loc.getBlockX());
+        loc.setY(loc.getBlockY());
+        loc.setZ(loc.getBlockZ());
+
         this.face = face;
         this.blocksWidth = blocksWidth;
         this.blocksHeight = blocksHeight;
