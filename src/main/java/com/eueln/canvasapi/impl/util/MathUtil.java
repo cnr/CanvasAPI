@@ -64,19 +64,20 @@ public class MathUtil {
         return loc.add(0, 1, 0).add(getOffset(face)).toVector();
     }
 
+    // TODO: offsets for negative blocks
     private static Vector getOffset(BlockFace face) {
         switch (face) {
             case WEST:
-                return new Vector(0, 0, 0);
+                return new Vector(0 - (1/16D), 0, 0);
 
             case SOUTH:
-                return new Vector(0, 0, 1);
+                return new Vector(0, 0, 1 + (1/16D));
 
             case EAST:
-                return new Vector(1, 0, 1);
+                return new Vector(1 + (1/16D), 0, 1);
 
             case NORTH:
-                return new Vector(1, 0, 0);
+                return new Vector(1, 0, 0 - (1/16D));
 
             default:
                 throw new IllegalArgumentException();
