@@ -28,8 +28,6 @@ public class MapCanvasGraphics implements CanvasGraphics {
         this.blocksWidth = blocksWidth;
         this.blocksHeight = blocksHeight;
 
-        // TODO: we need to somehow get ticking in here
-
         sections = new MapCanvasSection[blocksWidth * blocksHeight];
         initSections();
     }
