@@ -47,6 +47,7 @@ public class CanvasAPI extends JavaPlugin implements Listener {
             @Override
             public void paint(CanvasGraphics g) {
                 g.drawRect(50, 50, 100, 100);
+                g.drawString("Testing One Two Three", 10, 10);
             }
         };
         canvas.add(component);

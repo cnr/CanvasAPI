@@ -7,6 +7,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.map.MapFont;
+import org.bukkit.map.MinecraftFont;
 
 public class MapCanvasGraphics implements CanvasGraphics {
     private final Location loc;
@@ -70,7 +72,21 @@ public class MapCanvasGraphics implements CanvasGraphics {
 
     @Override
     public void drawString(String str, int x, int y) {
-        // TODO
+        MapFont font = MinecraftFont.Font;
+
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+
+            MapFont.CharacterSprite sprite = font.getChar(ch);
+            for (int row = 0; row < sprite.getHeight(); row++) {
+                for (int column = 0; column < sprite.getWidth(); column++) {
+                    if (sprite.get(row, column)) {
+                        setPixel(x + column, y + row, (byte)38);
+                    }
+                }
+            }
+            x += sprite.getWidth() + 1;
+        }
     }
 
     private void setPixel(int x, int y, byte color) {
