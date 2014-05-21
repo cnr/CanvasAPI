@@ -1,9 +1,7 @@
 package com.eueln.canvasapi.impl.util;
 
-import com.eueln.canvasapi.impl.map.MapCanvasGraphics;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 /*
@@ -52,13 +50,13 @@ public class MathUtil {
         return new Vector(u, v, 0);
     }
 
-    public static Vector getTouchedPoint(Player player, MapCanvasGraphics graphics) {
+    /*public static Vector getTouchedPoint(Player player, MapCanvasGraphics graphics) {
         Vector planeOrigin = getOrigin(graphics.getLocation(), graphics.getBlockFace());
         Vector planeXDirection = getXDirection(graphics.getPositiveXFace());
         Vector planeYDirection = new Vector(0, -1, 0);
 
         return getIntersection(player.getEyeLocation().toVector(), player.getLocation().getDirection(), planeOrigin, planeXDirection, planeYDirection);
-    }
+    }*/
 
     private static Vector getOrigin(Location loc, BlockFace face) {
         return loc.add(0, 1, 0).add(getOffset(face)).toVector();

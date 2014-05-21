@@ -15,7 +15,7 @@ import java.util.List;
 
 public class FrameUtil {
 
-    public static EntityItemFrame[] createFrames(MapCanvasGraphics canvas) {
+    public static EntityItemFrame[] createFrames(MapCanvasBackend canvas) {
         EntityItemFrame[] frames = new EntityItemFrame[canvas.getSections().length];
         for (MapCanvasSection section : canvas.getSections()) {
 

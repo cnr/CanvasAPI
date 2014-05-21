@@ -1,31 +1,45 @@
 package com.eueln.canvasapi;
 
+import com.eueln.canvasapi.impl.CanvasManager;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class Canvas extends CanvasContainer {
+    private final CanvasBackend backend;
     private final CanvasGraphics graphics;
 
     private final Set<Player> canSee = new HashSet<>();
 
-    public Canvas(CanvasGraphics graphicsProvider) {
-        super(0, 0, graphicsProvider.getWidth(), graphicsProvider.getHeight());
-        this.graphics = graphicsProvider;
-        graphicsProvider.register(this);
+    public Canvas(CanvasBackend backend) {
+        this(backend, new CanvasGraphics(backend));
     }
 
+    private Canvas(CanvasBackend backend, CanvasGraphics graphics) {
+        super(0, 0, graphics.getWidth(), graphics.getHeight());
+        this.backend = backend;
+        this.graphics = graphics;
+        CanvasManager.register(this);
+    }
+
+    public void repaint() {
+        paint(graphics);
+    }
+
+    public CanvasBackend getBackend() {
+        return backend;
+    }
 
     // ----- Player visibility -----
 
     public void setVisible(Player player, boolean visible) {
         if (visible) {
             canSee.add(player);
-            graphics.showTo(player);
+            CanvasManager.show(player, this);
         } else {
             canSee.remove(player);
-            graphics.hideFrom(player);
+            CanvasManager.hide(player, this);
         }
     }
 
@@ -43,8 +57,12 @@ public class Canvas extends CanvasContainer {
     // for Canvas
     @Override
     public void setVisible(boolean visibleToAll) {
-        super.setVisible(true);
-        graphics.showToAll();
+        super.setVisible(visibleToAll);
+        if (visibleToAll) {
+            CanvasManager.showAll(this);
+        } else {
+            CanvasManager.hideAll(this);
+        }
     }
 
     public boolean isVisibleToAll() {

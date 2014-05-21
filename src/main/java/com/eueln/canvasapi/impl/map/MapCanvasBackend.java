@@ -1,16 +1,19 @@
 package com.eueln.canvasapi.impl.map;
 
 import com.eueln.canvasapi.Canvas;
-import com.eueln.canvasapi.CanvasGraphics;
-import com.eueln.canvasapi.impl.CanvasAPI;
+import com.eueln.canvasapi.CanvasBackend;
+import net.minecraft.server.v1_7_R3.EntityItemFrame;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.map.MapFont;
-import org.bukkit.map.MinecraftFont;
 
-public class MapCanvasGraphics implements CanvasGraphics {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class MapCanvasBackend implements CanvasBackend {
     private final Location loc;
     private final BlockFace face;
     private final int blocksWidth;
@@ -18,8 +21,9 @@ public class MapCanvasGraphics implements CanvasGraphics {
     private Canvas canvas;
 
     private final MapCanvasSection[] sections;
+    private final EntityItemFrame[] frames;
 
-    public MapCanvasGraphics(Location loc, BlockFace face, int blocksWidth, int blocksHeight) {
+    public MapCanvasBackend(Location loc, BlockFace face, int blocksWidth, int blocksHeight) {
         this.loc = loc;
         // Floor the location values
         loc.setX(loc.getBlockX());
@@ -32,12 +36,15 @@ public class MapCanvasGraphics implements CanvasGraphics {
 
         sections = new MapCanvasSection[blocksWidth * blocksHeight];
         initSections();
+
+        frames = FrameUtil.createFrames(this);
     }
 
     public Location getLocation() {
         return loc.clone();
     }
 
+    @Override
     public World getWorld() {
         return loc.getWorld();
     }
@@ -54,42 +61,21 @@ public class MapCanvasGraphics implements CanvasGraphics {
         return blocksHeight;
     }
 
-    @Override
-    public Canvas getCanvas() {
-        return canvas;
-    }
 
-    // ----- Drawing Functions -----
+    // ----- CanvasBackend implementation -----
 
     @Override
-    public void drawRect(int x, int y, int width, int height) {
-        for (int i = x; i < x + width; i++) {
-            for (int k = y; k < y + height; k++) {
-                setPixel(i, k, (byte)38); // TODO: colors
-            }
-        }
+    public int getWidth() {
+        return blocksWidth * 128;
     }
 
     @Override
-    public void drawString(String str, int x, int y) {
-        MapFont font = MinecraftFont.Font;
-
-        for (int i = 0; i < str.length(); i++) {
-            char ch = str.charAt(i);
-
-            MapFont.CharacterSprite sprite = font.getChar(ch);
-            for (int row = 0; row < sprite.getHeight(); row++) {
-                for (int column = 0; column < sprite.getWidth(); column++) {
-                    if (sprite.get(row, column)) {
-                        setPixel(x + column, y + row, (byte)38);
-                    }
-                }
-            }
-            x += sprite.getWidth() + 1;
-        }
+    public int getHeight() {
+        return blocksHeight * 128;
     }
 
-    private void setPixel(int x, int y, byte color) {
+    @Override
+    public void setPixel(int x, int y, byte color) {
         int xSection = x >> 7;
         int ySection = y >> 7;
 
@@ -103,44 +89,45 @@ public class MapCanvasGraphics implements CanvasGraphics {
         getSection(xSection, ySection).set(xPixel, yPixel, color);
     }
 
-
-    // ----- Public property getters -----
-
     @Override
-    public int getWidth() {
-        return blocksWidth * 128;
-    }
-
-    @Override
-    public int getHeight() {
-        return blocksHeight * 128;
-    }
-
-
-    // ----- Called by Canvas -----
-
-    @Override
-    public void register(Canvas canvas) {
-        if (this.canvas != null) {
-            throw new IllegalStateException("Canvas already set");
+    public void update(Canvas canvas) {
+        for (MapCanvasSection section : sections) {
+            if (section.hasChanges()) {
+                section.clearChanges();
+                resendSection(canvas, section);
+            }
         }
-        CanvasAPI.instance().getMapManager().register(this);
-        this.canvas = canvas;
     }
+
+    private void resendSection(Canvas canvas, MapCanvasSection section) {
+        List<Player> sendSectionTo = new ArrayList<>();
+
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            if (canvas.isVisible(player)) {
+                // TODO: check if they're in a different world
+                // it's going to require lots of juggling.
+                sendSectionTo.add(player);
+            }
+        }
+
+        FrameUtil.sendSection(sendSectionTo, section.getMapId(), section.getData());
+    }
+
 
     @Override
     public void showTo(Player player) {
-        CanvasAPI.instance().getMapManager().showTo(player, this);
-    }
+        // Spawn the frame
+        FrameUtil.spawn(player, frames);
 
-    @Override
-    public void showToAll() {
-        CanvasAPI.instance().getMapManager().showToAll(this);
+        // Send the maps from each section
+        for (MapCanvasSection section : sections) {
+            FrameUtil.sendSection(Arrays.asList(player), section.getMapId(), section.getData());
+        }
     }
 
     @Override
     public void hideFrom(Player player) {
-        CanvasAPI.instance().getMapManager().hideFrom(player, this);
+        FrameUtil.destroy(player, frames);
     }
 
 
@@ -152,10 +139,6 @@ public class MapCanvasGraphics implements CanvasGraphics {
                 sections[x + (y * blocksWidth)] = new MapCanvasSection(x, y);
             }
         }
-    }
-
-    protected void repaint() {
-        canvas.paint(this);
     }
 
     protected MapCanvasSection getSection(int x, int y) {
