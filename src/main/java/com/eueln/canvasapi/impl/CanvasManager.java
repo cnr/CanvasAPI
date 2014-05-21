@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -66,41 +67,40 @@ public class CanvasManager implements Listener, Runnable {
     // Fire canvas interact events
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        // TODO
-        /*for (MapCanvasBackend backend : registered) {
+        for (Canvas canvas : registered) {
+            CanvasBackend backend = canvas.getBackend();
             if (backend.getWorld() != event.getPlayer().getWorld()) {
                 continue;
             }
-            Canvas canvas = backend.getCanvas();
 
-            org.bukkit.util.Vector vector = MathUtil.getTouchedPoint(event.getPlayer(), backend);
-            int touchedX = (int)Math.floor(vector.getX() * 128);
-            int touchedY = (int)Math.floor(vector.getY() * 128);
-
-            if (touchedX >= 0 && touchedY >= 0 && touchedX < canvas.getWidth() && touchedY < canvas.getHeight()) {
-                canvas.fireClickEvent(event.getPlayer(), touchedX, touchedY);
+            Vector vector = backend.getTouchedPoint(event.getPlayer());
+            if (vector != null) {
+                canvas.fireClickEvent(event.getPlayer(), vector.getBlockX(), vector.getBlockY());
             }
-        }*/
+        }
     }
 
     // This seems like it could get out of hand. Maybe we should avoid / remove this entirely.
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
-        // TODO
-        /*for (MapCanvasBackend backend : registered) {
-            if (backend.getWorld() != event.getPlayer().getWorld()) {
+        for (final Canvas canvas : registered) {
+            final CanvasBackend backend = canvas.getBackend();
+            final Player player = event.getPlayer();
+
+            if (player.getWorld() != backend.getWorld()) {
                 continue;
             }
-            Canvas canvas = backend.getCanvas();
 
-            org.bukkit.util.Vector vector = MathUtil.getTouchedPoint(event.getPlayer(), backend);
-            int touchedX = (int)Math.floor(vector.getX() * 128);
-            int touchedY = (int)Math.floor(vector.getY() * 128);
-
-            if (touchedX >= 0 && touchedY >= 0 && touchedX < canvas.getWidth() && touchedY < canvas.getHeight()) {
-                canvas.fireHoverEvent(event.getPlayer(), touchedX, touchedY);
-            }
-        }*/
+            Bukkit.getScheduler().runTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    Vector vector = backend.getTouchedPoint(player);
+                    if (vector != null) {
+                        canvas.fireHoverEvent(player, vector.getBlockX(), vector.getBlockY());
+                    }
+                }
+            });
+        }
     }
 
 

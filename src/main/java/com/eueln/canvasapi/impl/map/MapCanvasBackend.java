@@ -2,12 +2,14 @@ package com.eueln.canvasapi.impl.map;
 
 import com.eueln.canvasapi.Canvas;
 import com.eueln.canvasapi.CanvasBackend;
+import com.eueln.canvasapi.impl.util.MathUtil;
 import net.minecraft.server.v1_7_R3.EntityItemFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +20,6 @@ public class MapCanvasBackend implements CanvasBackend {
     private final BlockFace face;
     private final int blocksWidth;
     private final int blocksHeight;
-    private Canvas canvas;
 
     private final MapCanvasSection[] sections;
     private final EntityItemFrame[] frames;
@@ -128,6 +129,18 @@ public class MapCanvasBackend implements CanvasBackend {
     @Override
     public void hideFrom(Player player) {
         FrameUtil.destroy(player, frames);
+    }
+
+    @Override
+    public Vector getTouchedPoint(Player player) {
+        Vector vector = MathUtil.getTouchedPoint(player, getLocation(), getBlockFace(), getPositiveXFace());
+        vector.multiply(128);
+
+        // We're abusing vector for this.
+        if (vector.getBlockX() >= 0 && vector.getBlockY() >= 0 && vector.getBlockX() < getWidth() && vector.getBlockY() < getHeight()) {
+            return vector;
+        }
+        return null;
     }
 
 

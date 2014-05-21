@@ -2,6 +2,7 @@ package com.eueln.canvasapi;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 public interface CanvasBackend {
     public int getWidth();
@@ -12,4 +13,6 @@ public interface CanvasBackend {
     public World getWorld(); // The world the canvas is visible in
     public void showTo(Player player);
     public void hideFrom(Player player);
+
+    public Vector getTouchedPoint(Player player);
 }
