@@ -72,7 +72,7 @@ public class CanvasManager implements Listener, Runnable {
     public void onInteract(PlayerInteractEvent event) {
         for (Canvas canvas : registered) {
             CanvasBackend backend = canvas.getBackend();
-            if (backend.getWorld() != event.getPlayer().getWorld()) {
+            if (backend.getWorld() != event.getPlayer().getWorld() || !canvas.isVisible(event.getPlayer())) {
                 continue;
             }
 
@@ -90,7 +90,7 @@ public class CanvasManager implements Listener, Runnable {
             final CanvasBackend backend = canvas.getBackend();
             final Player player = event.getPlayer();
 
-            if (player.getWorld() != backend.getWorld()) {
+            if (player.getWorld() != backend.getWorld() || !canvas.isVisible(event.getPlayer())) {
                 continue;
             }
 
