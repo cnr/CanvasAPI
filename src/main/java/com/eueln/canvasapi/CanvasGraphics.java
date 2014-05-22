@@ -4,7 +4,6 @@ import org.bukkit.map.MapFont;
 import org.bukkit.map.MapPalette;
 import org.bukkit.map.MinecraftFont;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class CanvasGraphics {
@@ -40,24 +39,10 @@ public class CanvasGraphics {
         }
     }
 
-    public void drawImage(BufferedImage image, int startX, int startY) {
-        drawImage(image, startX, startY, image.getWidth(), image.getHeight());
-    }
-
     @SuppressWarnings("deprecation")
-    public void drawImage(BufferedImage image, int startX, int startY, int width, int height) {
-        // Scale the image if necessary
-        if (image.getWidth() != width || image.getHeight() != height) {
-            Image scaled = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-
-            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            Graphics g = image.getGraphics();
-            g.drawImage(scaled, 0, 0, null);
-            g.dispose();
-        }
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+    public void drawImage(BufferedImage image, int startX, int startY) {
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
                 int rgb = image.getRGB(x, y);
 
                 byte color = MapPalette.matchColor((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF);
