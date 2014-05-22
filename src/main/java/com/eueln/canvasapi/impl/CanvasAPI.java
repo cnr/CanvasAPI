@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.map.MinecraftFont;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.imageio.ImageIO;
@@ -33,6 +34,7 @@ public class CanvasAPI extends JavaPlugin implements Listener {
             @Override
             public void paint(CanvasGraphics g) {
                 g.drawRect(50, 50, 100, 100);
+                g.setFont(MinecraftFont.Font, 3);
                 g.drawString("Testing One Two Threeeeeeeeeeeee", 10, 10);
             }
         };

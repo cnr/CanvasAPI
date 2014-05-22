@@ -12,6 +12,7 @@ public class CanvasGraphics {
     @SuppressWarnings("deprecation")
     private byte color = MapPalette.WHITE;
     private MapFont font = MinecraftFont.Font;
+    private int fontScale = 1;
 
     public CanvasGraphics(CanvasBackend backend) {
         this.backend = backend;
@@ -36,11 +37,16 @@ public class CanvasGraphics {
             for (int row = 0; row < sprite.getHeight(); row++) {
                 for (int column = 0; column < sprite.getWidth(); column++) {
                     if (sprite.get(row, column)) {
-                        backend.setPixel(x + column, y + row, color);
+
+                        for (int scaledX = 0; scaledX < fontScale; scaledX++) {
+                            for (int scaledY = 0; scaledY < fontScale; scaledY++) {
+                                backend.setPixel(x + (column * fontScale) + scaledX, y + (row * fontScale) + scaledY, color);
+                            }
+                        }
                     }
                 }
             }
-            x += sprite.getWidth() + 1;
+            x += (sprite.getWidth() * fontScale) + fontScale;
         }
     }
 
@@ -63,8 +69,9 @@ public class CanvasGraphics {
         this.color = (byte) color;
     }
 
-    public void setFont(MapFont font) {
+    public void setFont(MapFont font, int scale) {
         this.font = font;
+        this.fontScale = scale;
     }
 
 
