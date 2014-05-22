@@ -65,8 +65,21 @@ public class CanvasGraphics {
 
     // ----- Graphics settings -----
 
-    public void setColor(int color) {
-        this.color = (byte) color;
+    public void setColor(java.awt.Color color) {
+        setColor(color.getRed(), color.getGreen(), color.getBlue());
+    }
+
+    public void setColor(org.bukkit.Color color) {
+        setColor(color.getRed(), color.getGreen(), color.getBlue());
+    }
+
+    @SuppressWarnings("deprecation")
+    public void setColor(int r, int g, int b) {
+        setColor(MapPalette.matchColor(r, g, b));
+    }
+
+    public void setColor(byte color) {
+        this.color = color;
     }
 
     public void setFont(MapFont font, int scale) {
