@@ -54,7 +54,7 @@ public abstract class CanvasContainer extends CanvasComponent {
     public void paint(CanvasGraphics g) {
         for (CanvasComponent component : components) {
             if (component.isVisible()) {
-                component.paint(g);
+                component.doPaint(g);
             }
         }
     }

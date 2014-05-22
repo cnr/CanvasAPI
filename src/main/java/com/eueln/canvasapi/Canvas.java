@@ -24,7 +24,7 @@ public class Canvas extends CanvasContainer {
     }
 
     public void repaint() {
-        paint(graphics);
+        doPaint(graphics);
     }
 
     public CanvasBackend getBackend() {

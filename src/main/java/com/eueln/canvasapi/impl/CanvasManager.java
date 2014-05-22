@@ -33,6 +33,9 @@ public class CanvasManager implements Listener, Runnable {
     @Override
     public void run() {
         for (Canvas canvas : registered) {
+            if (canvas.isValid()) {
+                continue;
+            }
             canvas.repaint();
             canvas.getBackend().update(canvas);
         }

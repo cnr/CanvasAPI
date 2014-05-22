@@ -78,7 +78,7 @@ public abstract class CanvasComponent {
 
 
     // ----- Paint-triggering
-    protected boolean isValid() {
+    public boolean isValid() {
         return valid;
     }
 
@@ -87,6 +87,11 @@ public abstract class CanvasComponent {
         if (parent != null && parent.isValid()) {
             parent.invalidate();
         }
+    }
+
+    protected void doPaint(CanvasGraphics g) {
+        paint(g);
+        valid = true;
     }
 
     public abstract void paint(CanvasGraphics g);
