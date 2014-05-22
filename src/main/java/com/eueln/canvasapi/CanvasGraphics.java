@@ -9,21 +9,26 @@ import java.awt.image.BufferedImage;
 public class CanvasGraphics {
     private final CanvasBackend backend;
 
+    @SuppressWarnings("deprecation")
+    private byte color = MapPalette.WHITE;
+    private MapFont font = MinecraftFont.Font;
+
     public CanvasGraphics(CanvasBackend backend) {
         this.backend = backend;
     }
 
+
+    // ----- Drawing methods -----
+
     public void drawRect(int x, int y, int width, int height) {
         for (int i = x; i < x + width; i++) {
             for (int k = y; k < y + height; k++) {
-                backend.setPixel(i, k, (byte) 38); // TODO: colors
+                backend.setPixel(i, k, color);
             }
         }
     }
 
     public void drawString(String str, int x, int y) {
-        MapFont font = MinecraftFont.Font;
-
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
 
@@ -31,7 +36,7 @@ public class CanvasGraphics {
             for (int row = 0; row < sprite.getHeight(); row++) {
                 for (int column = 0; column < sprite.getWidth(); column++) {
                     if (sprite.get(row, column)) {
-                        backend.setPixel(x + column, y + row, (byte)38);
+                        backend.setPixel(x + column, y + row, color);
                     }
                 }
             }
@@ -50,6 +55,18 @@ public class CanvasGraphics {
             }
         }
     }
+
+
+    // ----- Graphics settings -----
+
+    public void setColor(int color) {
+        this.color = (byte) color;
+    }
+
+    public void setFont(MapFont font) {
+        this.font = font;
+    }
+
 
     public int getWidth() {
         return backend.getWidth();
