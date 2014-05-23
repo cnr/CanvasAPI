@@ -4,6 +4,7 @@ import com.eueln.canvasapi.Canvas;
 import com.eueln.canvasapi.CanvasComponent;
 import com.eueln.canvasapi.CanvasGraphics;
 import com.eueln.canvasapi.components.ImageComponent;
+import com.eueln.canvasapi.components.TextLabelComponent;
 import com.eueln.canvasapi.event.InteractListener;
 import com.eueln.canvasapi.impl.map.MapCanvasBackend;
 import org.bukkit.ChatColor;
@@ -34,11 +35,14 @@ public class CanvasAPI extends JavaPlugin implements Listener {
             @Override
             public void paint(CanvasGraphics g) {
                 g.drawRect(50, 50, 100, 100);
-                g.setFont(MinecraftFont.Font, 3);
-                g.drawString("Testing One Two Threeeeeeeeeeeee", 10, 10);
             }
         };
         canvas.add(component);
+
+        TextLabelComponent testLabel = new TextLabelComponent(10, 10, "Testing One Two Threeeeeeeeeeeee");
+        testLabel.setFont(MinecraftFont.Font, 3);
+        canvas.add(testLabel);
+
         canvas.addInteractListener(new InteractListener() {
             @Override
             public void onClick(Canvas canvas, Player player, int x, int y) {
