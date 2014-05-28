@@ -1,23 +1,14 @@
 package com.eueln.canvasapi.impl;
 
 import com.eueln.canvasapi.Canvas;
-import com.eueln.canvasapi.components.ImageComponent;
-import com.eueln.canvasapi.components.SolidColorComponent;
-import com.eueln.canvasapi.components.TextLabelComponent;
-import com.eueln.canvasapi.event.InteractListener;
+import com.eueln.canvasapi.example.paint.PaintComponent;
 import com.eueln.canvasapi.impl.map.MapCanvasBackend;
-import org.bukkit.ChatColor;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.map.MapPalette;
-import org.bukkit.map.MinecraftFont;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import javax.imageio.ImageIO;
-import java.io.IOException;
 
 public class CanvasAPI extends JavaPlugin implements Listener {
 
@@ -33,7 +24,7 @@ public class CanvasAPI extends JavaPlugin implements Listener {
 
         Canvas canvas = new Canvas(new MapCanvasBackend(player.getLocation().add(0, 3, 0), BlockFace.SOUTH, 6, 6));
 
-        // Add a solid white component
+        /*// Add a solid white component
         canvas.add(new SolidColorComponent(50, 50, 100, 100, MapPalette.WHITE));
 
         // Add a long text label component
@@ -57,7 +48,11 @@ public class CanvasAPI extends JavaPlugin implements Listener {
             public void onHover(Canvas canvas, Player player, int x, int y) {
                 player.sendMessage(ChatColor.GREEN + String.format("Hover: %d, %d", x, y));
             }
-        });
+        });*/
+
+        // Add a full-size paint component to our canvas
+        PaintComponent component = new PaintComponent(0, 0, canvas.getWidth(), canvas.getHeight());
+        canvas.add(component);
 
         // Set the canvas as visible for the player
         canvas.setVisible(player, true);
