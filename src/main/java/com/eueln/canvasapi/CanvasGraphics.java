@@ -14,6 +14,9 @@ public class CanvasGraphics {
     private MapFont font = MinecraftFont.Font;
     private int fontScale = 1;
 
+    private int xOffset;
+    private int yOffset;
+
     public CanvasGraphics(CanvasBackend backend) {
         this.backend = backend;
     }
@@ -24,7 +27,7 @@ public class CanvasGraphics {
     public void drawRect(int x, int y, int width, int height) {
         for (int i = x; i < x + width; i++) {
             for (int k = y; k < y + height; k++) {
-                backend.setPixel(i, k, color);
+                setOffsetPixel(i, k, color);
             }
         }
     }
@@ -40,7 +43,7 @@ public class CanvasGraphics {
 
                         for (int scaledX = 0; scaledX < fontScale; scaledX++) {
                             for (int scaledY = 0; scaledY < fontScale; scaledY++) {
-                                backend.setPixel(x + (column * fontScale) + scaledX, y + (row * fontScale) + scaledY, color);
+                                setOffsetPixel(x + (column * fontScale) + scaledX, y + (row * fontScale) + scaledY, color);
                             }
                         }
                     }
@@ -57,9 +60,20 @@ public class CanvasGraphics {
                 int rgb = image.getRGB(x, y);
 
                 byte color = MapPalette.matchColor((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF);
-                backend.setPixel(x + startX, y + startY, color);
+                setOffsetPixel(x + startX, y + startY, color);
             }
         }
+    }
+
+    private void setOffsetPixel(int x, int y, byte color) {
+        x += xOffset;
+        y += yOffset;
+
+        if (x < 0 || y < 0 || x >= getWidth() || y >= getWidth()) {
+            return;
+        }
+
+        backend.setPixel(x, y, color);
     }
 
 
@@ -94,5 +108,19 @@ public class CanvasGraphics {
 
     public int getHeight() {
         return backend.getHeight();
+    }
+
+    /*
+     * Updates the positional offset and bounds
+     *
+     * This is called by a container to make sure its components can
+     * draw as if the origin of the container is the origin of the
+     * graphics object.
+     *
+     * TODO: consider preventing components from drawing outside of the bounding box
+     */
+    protected void updateOffsets(CanvasContainer container) {
+        xOffset = container.getX();
+        yOffset = container.getY();
     }
 }

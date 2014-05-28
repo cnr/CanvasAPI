@@ -41,7 +41,7 @@ public abstract class CanvasContainer extends CanvasComponent {
         }
 
         for (CanvasComponent component : components) {
-            CanvasComponent componentAt = component.getComponentAt(x, y);
+            CanvasComponent componentAt = component.getComponentAt(x - getX(), y - getY());
             if (componentAt != null) {
                 return componentAt;
             }
@@ -52,9 +52,16 @@ public abstract class CanvasContainer extends CanvasComponent {
 
     @Override
     public void paint(CanvasGraphics g) {
+        g.updateOffsets(this);
+
         for (CanvasComponent component : components) {
             if (component.isVisible()) {
                 component.doPaint(g);
+
+                if (component instanceof CanvasContainer) {
+                    // Our offsets were clobbered by this container; update them again
+                    g.updateOffsets(this);
+                }
             }
         }
     }
