@@ -40,14 +40,14 @@ public abstract class CanvasContainer extends CanvasComponent {
             return null;
         }
 
+        CanvasComponent target = this;
         for (CanvasComponent component : components) {
-            CanvasComponent componentAt = component.getComponentAt(x - getX(), y - getY());
-            if (componentAt != null) {
-                return componentAt;
+            if (component.contains(x - getX(), y - getY())) {
+                target = component;
             }
         }
 
-        return this;
+        return target;
     }
 
     @Override
@@ -74,7 +74,7 @@ public abstract class CanvasContainer extends CanvasComponent {
             if (component == this) {
                 super.fireClickEvent(canvas, player, x, y);
             } else {
-                component.fireClickEvent(canvas, player, x, y);
+                component.fireClickEvent(canvas, player, x - getX(), y - getY());
             }
         }
     }
@@ -87,7 +87,7 @@ public abstract class CanvasContainer extends CanvasComponent {
             if (component == this) {
                 super.fireHoverEvent(canvas, player, x, y);
             } else {
-                component.fireHoverEvent(canvas, player, x, y);
+                component.fireHoverEvent(canvas, player, x - getX(), y - getY());
             }
         }
     }
