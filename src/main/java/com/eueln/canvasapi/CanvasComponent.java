@@ -46,10 +46,6 @@ public abstract class CanvasComponent {
             && this.y <= y && y < this.y + height;
     }
 
-    public CanvasComponent getComponentAt(int x, int y) {
-        return contains(x, y) ? this : null;
-    }
-
 
     // ----- Visibility -----
 

@@ -34,7 +34,6 @@ public abstract class CanvasContainer extends CanvasComponent {
         return components.toArray(new CanvasComponent[components.size()]);
     }
 
-    @Override
     public CanvasComponent getComponentAt(int x, int y) {
         if (!contains(x, y)) {
             return null;
