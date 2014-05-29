@@ -12,28 +12,59 @@ public abstract class CanvasContainer extends CanvasComponent {
         super(x, y, width, height);
     }
 
+    /**
+     * Add a component to this container
+     *
+     * @param component The component to add
+     */
     public void add(CanvasComponent component) {
         components.add(component);
         component.setParent(this);
         invalidate();
     }
 
+    /**
+     * Add a component to this container at the specified index
+     *
+     * @param component The component to add
+     * @param index The index of the component
+     */
     public void add(CanvasComponent component, int index) {
         components.add(index, component);
         component.setParent(this);
         invalidate();
     }
 
+    /**
+     * Remove a component from this container
+     *
+     * @param component The component to remove
+     */
     public void remove(CanvasComponent component) {
         components.remove(component);
         component.removeParent();
         invalidate();
     }
 
+    /**
+     * Returns an (copied) array of components belonging to this
+     * container
+     *
+     * @return Sub-components of this container
+     */
     public CanvasComponent[] getComponents() {
         return components.toArray(new CanvasComponent[components.size()]);
     }
 
+    /**
+     * Returns the component located at the specified (x, y) cartesian
+     * pair
+     *
+     * @param x The X position
+     * @param y The Y position
+     * @return The component located at the specified coordinates, if
+     *         any
+     */
     public CanvasComponent getComponentAt(int x, int y) {
         if (!contains(x, y)) {
             return null;

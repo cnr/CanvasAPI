@@ -24,6 +24,15 @@ public class CanvasGraphics {
 
     // ----- Drawing methods -----
 
+    /**
+     * Draws a rectangle starting at the cartesian coordinate (x, y)
+     * with the specified width and height
+     *
+     * @param x The top-left X position to start at
+     * @param y The top-left Y position to start at
+     * @param width The rectangle width
+     * @param height The rectangle height
+     */
     public void drawRect(int x, int y, int width, int height) {
         for (int i = x; i < x + width; i++) {
             for (int k = y; k < y + height; k++) {
@@ -32,6 +41,13 @@ public class CanvasGraphics {
         }
     }
 
+    /**
+     * Draws text at the specified location
+     *
+     * @param str The text to be drawn
+     * @param x The top-left X position to start at
+     * @param y The top-left Y position to start at
+     */
     public void drawString(String str, int x, int y) {
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
@@ -53,6 +69,13 @@ public class CanvasGraphics {
         }
     }
 
+    /**
+     * Draws an image at the specified location
+     *
+     * @param image The image to be drawn
+     * @param startX The top-left X position to start at
+     * @param startY The top-left Y position to start at
+     */
     @SuppressWarnings("deprecation")
     public void drawImage(BufferedImage image, int startX, int startY) {
         for (int x = 0; x < image.getWidth(); x++) {
@@ -65,6 +88,9 @@ public class CanvasGraphics {
         }
     }
 
+    /*
+     * Offsets and draws a pixel at the proper location
+     */
     private void setOffsetPixel(int x, int y, byte color) {
         x += xOffset;
         y += yOffset;
@@ -79,19 +105,44 @@ public class CanvasGraphics {
 
     // ----- Graphics settings -----
 
+    /**
+     * Sets the drawing color to the closest MapPalette approximation
+     * of this java.awt.Color
+     *
+     * @param color The color to approximately set
+     */
     public void setColor(java.awt.Color color) {
         setColor(color.getRed(), color.getGreen(), color.getBlue());
     }
 
+    /**
+     * Sets the drawing color to the closest MapPalette approximation
+     * of this org.bukkit.Color
+     *
+     * @param color The color to approximately set
+     */
     public void setColor(org.bukkit.Color color) {
         setColor(color.getRed(), color.getGreen(), color.getBlue());
     }
 
+    /**
+     * Sets the drawing color to the closest MapPalette approximation
+     * of the rgb components
+     *
+     * @param r The red component
+     * @param g The green component
+     * @param b The blue component
+     */
     @SuppressWarnings("deprecation")
     public void setColor(int r, int g, int b) {
         setColor(MapPalette.matchColor(r, g, b));
     }
 
+    /**
+     * Sets the exact MapPalette color as the current drawing color
+     *
+     * @param color The color to use
+     */
     public void setColor(byte color) {
         this.color = color;
     }
@@ -102,10 +153,20 @@ public class CanvasGraphics {
     }
 
 
+    /**
+     * Returns the width of the entire canvas
+     *
+     * @return The width of the entire canvas
+     */
     public int getWidth() {
         return backend.getWidth();
     }
 
+    /**
+     * Returns the height of the entire canvas
+     *
+     * @return The height of the entire canvas
+     */
     public int getHeight() {
         return backend.getHeight();
     }

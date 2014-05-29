@@ -37,7 +37,6 @@ public class CanvasManager implements Listener, Runnable {
                 continue;
             }
             canvas.repaint();
-            canvas.getBackend().update(canvas);
         }
     }
 

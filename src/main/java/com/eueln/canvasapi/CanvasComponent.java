@@ -25,10 +25,20 @@ public abstract class CanvasComponent {
         this.height = height;
     }
 
+    /**
+     * Returns the X position of this component
+     *
+     * @return The X position of this component
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Returns the Y position of this component
+     *
+     * @return The Y position of this component
+     */
     public int getY() {
         return y;
     }
@@ -67,14 +77,32 @@ public abstract class CanvasComponent {
         return y;
     }
 
+    /**
+     * Returns the width of this component
+     *
+     * @return This component's width
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Returns the height of this component
+     *
+     * @return This component's height
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * Returns whether this component resides in the area described by
+     * the cartesian coordinates (x, y)
+     *
+     * @param x The X position to check
+     * @param y The Y position to check
+     * @return Whether this component occupies this location
+     */
     public boolean contains(int x, int y) {
         return this.x <= x && x < this.x + width
             && this.y <= y && y < this.y + height;
@@ -83,10 +111,20 @@ public abstract class CanvasComponent {
 
     // ----- Visibility -----
 
+    /**
+     * Returns whether this component is drawn ("visible")
+     *
+     * @return Whether this component is visible
+     */
     public boolean isVisible() {
         return visible;
     }
 
+    /**
+     * Sets the component's visibility
+     *
+     * @param visible Whether this component should be drawn ("visible")
+     */
     public void setVisible(boolean visible) {
         this.visible = visible;
         invalidate();
@@ -94,6 +132,7 @@ public abstract class CanvasComponent {
 
 
     // ----- Component hierarchy -----
+
     protected void setParent(CanvasContainer parent) {
         if (this.parent != null) {
             this.parent.remove(this);
@@ -112,10 +151,20 @@ public abstract class CanvasComponent {
 
 
     // ----- Paint-triggering
+
+    /**
+     * Returns whether this component needs to be repainted
+     *
+     * @return Whether this component needs to be repainted
+     */
     public boolean isValid() {
         return valid;
     }
 
+    /**
+     * Marks this component and all parent components up the stack as
+     * needing to be redrawn
+     */
     public void invalidate() {
         valid = false;
         if (parent != null && parent.isValid()) {
@@ -128,15 +177,32 @@ public abstract class CanvasComponent {
         valid = true;
     }
 
+    /**
+     * Paints this component with the provided {@link com.eueln.canvasapi.CanvasGraphics}
+     * @param g The graphics to use while drawing
+     */
     public abstract void paint(CanvasGraphics g);
 
 
     // ----- Event handling
 
+    /**
+     * Adds an interact listener to this component
+     *
+     * @param listener The interact listener to add
+     */
     public void addInteractListener(InteractListener listener) {
         interactListeners.add(listener);
     }
 
+    /**
+     * Fires a click event on this component
+     *
+     * @param canvas The canvas involved in the event
+     * @param player The player involved in the event
+     * @param x The X position of the event
+     * @param y The Y position of the event
+     */
     public void fireClickEvent(Canvas canvas, Player player, int x, int y) {
         if (contains(x, y)) {
             for (InteractListener listener : interactListeners) {
@@ -145,6 +211,14 @@ public abstract class CanvasComponent {
         }
     }
 
+    /**
+     * Fires a hover event on this component
+     *
+     * @param canvas The canvas involved in the event
+     * @param player The player involved in the event
+     * @param x The X position of the event
+     * @param y The Y position of the event
+     */
     public void fireHoverEvent(Canvas canvas, Player player, int x, int y) {
         if (contains(x, y)) {
             for (InteractListener listener : interactListeners) {
