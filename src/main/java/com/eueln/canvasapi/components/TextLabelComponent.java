@@ -52,7 +52,7 @@ public class TextLabelComponent extends CanvasComponent {
 
     @Override
     public int getHeight() {
-        return font.getHeight();
+        return font.getHeight() * scale;
     }
 
     @Override
