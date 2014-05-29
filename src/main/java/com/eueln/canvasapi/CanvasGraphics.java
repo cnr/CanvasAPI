@@ -120,7 +120,7 @@ public class CanvasGraphics {
      * TODO: consider preventing components from drawing outside of the bounding box
      */
     protected void updateOffsets(CanvasContainer container) {
-        xOffset = container.getX();
-        yOffset = container.getY();
+        xOffset = container.getAbsoluteX();
+        yOffset = container.getAbsoluteY();
     }
 }

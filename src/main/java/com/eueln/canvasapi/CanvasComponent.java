@@ -33,6 +33,40 @@ public abstract class CanvasComponent {
         return y;
     }
 
+    /**
+     * Returns the absolute X position of this component as relative to
+     * the topmost component in the hierarchy
+     *
+     * @return This component's absolute X position
+     */
+    public int getAbsoluteX() {
+        CanvasContainer target = this.parent;
+
+        int x = getX();
+        while (target != null) {
+            x += target.getX();
+            target = target.getParent();
+        }
+        return x;
+    }
+
+    /**
+     * Returns the absolute Y position of this component as relative to
+     * the topmost component in the hierarchy
+     *
+     * @return This component's absolute Y position
+     */
+    public int getAbsoluteY() {
+        CanvasContainer target = this.parent;
+
+        int y = getY();
+        while (target != null) {
+            y += target.getY();
+            target = target.getParent();
+        }
+        return y;
+    }
+
     public int getWidth() {
         return width;
     }
@@ -66,6 +100,10 @@ public abstract class CanvasComponent {
         }
 
         this.parent = parent;
+    }
+
+    protected CanvasContainer getParent() {
+        return parent;
     }
 
     protected void removeParent() {
