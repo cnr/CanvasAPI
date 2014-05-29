@@ -16,3 +16,10 @@ dependencies {
     compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.1-SNAPSHOT'
     compile group: 'org.bukkit', name: 'craftbukkit', version: '1.7.9-R0.1-SNAPSHOT'
 }
+
+
+task javadoc(type: Javadoc, overwrite: true) {
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
+    exclude '**/impl/**'
+}
