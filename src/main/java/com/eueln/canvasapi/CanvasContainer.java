@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CanvasContainer extends CanvasComponent {
+public class CanvasContainer extends CanvasComponent {
     private final List<CanvasComponent> components = new ArrayList<>(); // components are drawn in the order they're inserted
 
     public CanvasContainer(int x, int y, int width, int height) {
