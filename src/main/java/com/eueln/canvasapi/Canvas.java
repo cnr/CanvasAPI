@@ -12,6 +12,9 @@ public class Canvas extends CanvasContainer {
 
     private final Set<Player> canSee = new HashSet<>();
 
+    /**
+     * @param backend The backend to use when drawing this canvas
+     */
     public Canvas(CanvasBackend backend) {
         this(backend, new CanvasGraphics(backend));
     }

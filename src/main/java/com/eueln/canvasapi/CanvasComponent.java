@@ -18,6 +18,12 @@ public abstract class CanvasComponent {
 
     private final List<InteractListener> interactListeners = new ArrayList<>();
 
+    /**
+     * @param x The X position of the component
+     * @param y The Y position of the component
+     * @param width The width of the component
+     * @param height The height of the component
+     */
     public CanvasComponent(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;

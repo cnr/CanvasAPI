@@ -8,6 +8,12 @@ import java.util.List;
 public class CanvasContainer extends CanvasComponent {
     private final List<CanvasComponent> components = new ArrayList<>(); // components are drawn in the order they're inserted
 
+    /**
+     * @param x The X position of the container
+     * @param y The Y position of the container
+     * @param width The width of the container
+     * @param height The height of the container
+     */
     public CanvasContainer(int x, int y, int width, int height) {
         super(x, y, width, height);
     }

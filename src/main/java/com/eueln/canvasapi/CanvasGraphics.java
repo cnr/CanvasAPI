@@ -17,6 +17,9 @@ public class CanvasGraphics {
     private int xOffset;
     private int yOffset;
 
+    /**
+     * @param backend The backend to be used when drawing the canvas
+     */
     public CanvasGraphics(CanvasBackend backend) {
         this.backend = backend;
     }
